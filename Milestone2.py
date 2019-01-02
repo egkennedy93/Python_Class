@@ -13,7 +13,7 @@ class Card:
         self.rank = rank
 
     def __str__(self):
-        return self.suit, self.rank
+        return self.rank + " of " + self.suit
 
 
 class Deck:
@@ -21,18 +21,20 @@ class Deck:
         self.deck = []
         for suit in suits:
             for rank in ranks:
-                card = Card(suit, rank)
-                self.deck.append(card.__str__())
+                self.deck.append(Card(suit, rank))
 
     def __str__(self):
-        return str(self.deck)
+        deck_comp = ' '
+        for i in self.deck:
+            deck_comp += '\n' + i.__str__()
+        return "The deck has: " + deck_comp
 
     def shuffle(self):
         random.shuffle(self.deck)
 
-    def deal(self, player_hand):
+    def deal(self):
         deal_card = self.deck.pop()
-        player_hand.append(deal_card)
+        return deal_card
 
 
 class Hand:
@@ -50,8 +52,7 @@ class Hand:
         pass
 
     def __str__(self):
-        return str(self.cards)
-
+        return " The hand contains " + str(self.cards)
 
 def hit(deck, hand):
     new_card = list(deck).pop()
@@ -73,13 +74,13 @@ if ready_to_play == "YES":
             time.sleep(1)
             new_deck.shuffle()
             print("Dealing out the hands ")
-            new_deck.deal(player.cards)
-            new_deck.deal(dealer.cards)
-            new_deck.deal(player.cards)
-            new_deck.deal(dealer.cards)
+            player.add_card(new_deck.deal())
+            dealer.add_card(new_deck.deal())
+            player.add_card(new_deck.deal())
+            dealer.add_card(new_deck.deal())
+            print(player.cards)
             player.value = values[player.cards[0][1]] + values[player.cards[1][1]]
             dealer.value = values[dealer.cards[0][1]] + values[dealer.cards[1][1]]
-
             if str(player.cards[0][1]).upper() == "ACE" or str(player.cards[1][1]).upper() == "ACE":
                 player.aces += 1
             if str(dealer.cards[0][1]).upper() == "ACE" or str(dealer.cards[1][1]).upper() == "ACE":
@@ -111,3 +112,4 @@ elif ready_to_play == "NO":
     print("Thank you for playing")
 else:
     print("Sorry that isn't a valid response. Please enter Yes or No")
+

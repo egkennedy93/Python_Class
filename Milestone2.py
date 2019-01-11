@@ -105,11 +105,42 @@ def take_bet(chips):
 
 def hit_or_stand(deck, hand):
     global playing
-    pass
+    while playing:
+        try:
+            while playing:
+                choice = input("Do you want to hit or stand?").upper()
+                if choice == "HIT":
+                    hit(deck, hand)
+                    for card in hand.cards:
+                        print(card)
+                    print("\n")
+                    print("current value: " + str(hand.value) + "\n")
+                elif choice == "STAND":
+                    playing = False
+        except:
+            print("You entered a incorrect value for hit or stand")
+
+def show_some(player_hand, dealer_hand):
+    print("Player:")
+    for player_card in player_hand.cards:
+        print(player_card)
+    print("With the total value of: " + str(player.value))
+    print("\n")
+    print("Dealer")
+    for dealer_card in dealer_hand.cards[1:]:
+        print(dealer_card)
 
 
-
-
+def show_all(player_hand,dealer_hand):
+    print("Player:")
+    for player_card in player_hand.cards:
+        print(player_card)
+    print("With the total value of: " + str(player.value))
+    print("\n")
+    print("Dealer")
+    for dealer_card in dealer_hand.cards:
+        print(dealer_card)
+    print("\n")
 
 
 ready_to_play = input("Welcome to Blackjack, are you ready to play? (Yes|No)").upper()
@@ -120,23 +151,13 @@ if ready_to_play == "YES":
     player = Hand()
     new_deck.shuffle()
     player.add_card(new_deck.deal())
-    #player_chips = Chips()
-    #hit(new_deck, player)
-   # while True:
-   #     print("\n"*100)
-   #     print("Shuffling the deck...")
-   #     time.sleep(1)
-   #     new_deck.shuffle()
-   #     print(new_deck)
-   #     print("Dealing out the hands ")
-   #     player.add_card(new_deck.deal())
-   #     print(player.value)
-   #     print(player.cards[0])
-   #     player_chips.bet = 100
-   #     take_bet(player_chips)
+    dealer.add_card(new_deck.deal())
+    player.add_card(new_deck.deal())
+    dealer.add_card(new_deck.deal())
+    print("about to show \n")
+    show_some(player, dealer)
+    hit_or_stand(new_deck, player)
 
-       # print(player_chips)
-       # break
 
 
 

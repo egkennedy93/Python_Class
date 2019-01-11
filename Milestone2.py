@@ -45,19 +45,71 @@ class Hand:
         self.value = 0
         self.aces = 0
 
+    def __str__(self):
+        new_card = ' '
+        for i in self.cards:
+            new_card += " " + i
+        return " The hand contains:" + str(new_card)
+
     def add_card(self, card):
-        self.cards.append(card)
+        self.cards.append(card.__str__())
+        self.value += values[card.rank]
+
+        if card.rank == 'Ace':
+            self.aces += 1
 
     def adjust_for_ace(self):
-        pass
+        while self.value > 21 and self.aces:
+            self.value -= 10
+            self.aces -= 1
+
+
+class Chips:
+
+    def __init__(self):
+        self.total = 100
+        self.bet = 0
 
     def __str__(self):
-        return " The hand contains " + str(self.cards)
+        return " The total is " + str(self.total)
+
+    def win_bet(self):
+        self.total = self.total + self.bet
+
+    def lose_bet(self):
+        self.total = self.total - self.bet
+        if self.total == 0:
+            print("You have ran out of money. Thank you for playing")
+            quit()
+
 
 def hit(deck, hand):
-    new_card = list(deck).pop()
-    hand.append(new_card)
-    print("adding card " + str(new_card) + " to the player hand " + str(hand))
+    single_card = deck.deal()
+    hand.add_card(single_card)
+    hand.adjust_for_ace()
+    #print("adding card " + str(single_card) + " to the hand " + str(hand))
+
+
+def take_bet(chips):
+    while True:
+        try:
+            chips.bet = int(input("How many chips would you like to bet? "))
+        except:
+            print("there was an error taking your bet")
+        else:
+            if chips.bet > chips.total:
+                print("sorry you don't have enough chips! You have: {}".format(chips.total))
+            else:
+                break
+
+
+def hit_or_stand(deck, hand):
+    global playing
+    pass
+
+
+
+
 
 
 ready_to_play = input("Welcome to Blackjack, are you ready to play? (Yes|No)").upper()
@@ -66,50 +118,30 @@ if ready_to_play == "YES":
     new_deck = Deck()
     dealer = Hand()
     player = Hand()
+    new_deck.shuffle()
+    player.add_card(new_deck.deal())
+    #player_chips = Chips()
+    #hit(new_deck, player)
+   # while True:
+   #     print("\n"*100)
+   #     print("Shuffling the deck...")
+   #     time.sleep(1)
+   #     new_deck.shuffle()
+   #     print(new_deck)
+   #     print("Dealing out the hands ")
+   #     player.add_card(new_deck.deal())
+   #     print(player.value)
+   #     print(player.cards[0])
+   #     player_chips.bet = 100
+   #     take_bet(player_chips)
 
-    while True:
-        try:
-            print("\n"*100)
-            print("Shuffling the deck...")
-            time.sleep(1)
-            new_deck.shuffle()
-            print("Dealing out the hands ")
-            player.add_card(new_deck.deal())
-            dealer.add_card(new_deck.deal())
-            player.add_card(new_deck.deal())
-            dealer.add_card(new_deck.deal())
-            print(player.cards)
-            player.value = values[player.cards[0][1]] + values[player.cards[1][1]]
-            dealer.value = values[dealer.cards[0][1]] + values[dealer.cards[1][1]]
-            if str(player.cards[0][1]).upper() == "ACE" or str(player.cards[1][1]).upper() == "ACE":
-                player.aces += 1
-            if str(dealer.cards[0][1]).upper() == "ACE" or str(dealer.cards[1][1]).upper() == "ACE":
-                dealer.aces += 1
-            # Checking the dealers dealt hand this will determine what the dealer does
-            if dealer.value == 21:
-                print("Dealer has blackjack. You lose!")
-                break
-        except IndexError:
-            print("There was an error when trying to shuffle and deal the cards, deck might be empty?")
-            break
-        break
-    while playing:
-        player_option = input("What do you want to do? \n hit|stay|raise|show hand").upper()
-        if player_option == "HIT":
-            hit(new_deck.deck, player.cards)
-            continue
-        if player_option == "STAY":
-            pass
-        if player_option == "RAISE":
-            pass
-        if player_option == "SHOW HAND":
-            print("\n"*100)
-            print(str(player.cards))
-        else:
-            break
+       # print(player_chips)
+       # break
 
-elif ready_to_play == "NO":
-    print("Thank you for playing")
-else:
-    print("Sorry that isn't a valid response. Please enter Yes or No")
+
+
+
+
+
+
 

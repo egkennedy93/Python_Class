@@ -4,6 +4,7 @@
     <option name="ignoredIdentifiers">
       <list>
         <option value="appTwo.models.Users.objects" />
+        <option value="blog.models.Post.objects" />
       </list>
     </option>
   </inspection_tool>
